@@ -17,10 +17,5 @@ export default defineConfig({
             }
         },
         chunkSizeWarningLimit: 1000, // Optional: Increase chunk size warning limit
-    },
-    server: {
-        https: true, // Ensure development server uses HTTPS
-    },
-    base: process.env.APP_URL ? `${process.env.APP_URL}/build/` : '/build/', // Ensure assets are served with correct base URL
-
+    }
 });
