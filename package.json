@@ -1,0 +1,27 @@
+{
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build"
+    },
+    "devDependencies": {
+        "autoprefixer": "^10.4.19",
+        "axios": "^1.6.4",
+        "flowbite": "^2.3.0",
+        "html5-qrcode": "^2.3.8",
+        "laravel-vite-plugin": "^1.0",
+        "postcss": "^8.4.38",
+        "tailwindcss": "^3.4.4",
+        "vite": "^5.0"
+    },
+    "dependencies": {
+        "@fullcalendar/core": "^6.1.15",
+        "@fullcalendar/daygrid": "^6.1.15",
+        "@fullcalendar/interaction": "^6.1.15",
+        "@fullcalendar/timegrid": "^6.1.15",
+        "alpinejs": "^3.14.1",
+        "apexcharts": "^3.51.0",
+        "fullcalendar": "^6.1.15"
+    }
+}
