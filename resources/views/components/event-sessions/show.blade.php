@@ -13,31 +13,44 @@
 
 
     <script>
-        function onScanSuccess(decodedText, decodedResult) {
-            // Get the Laravel Blade variables
-            const eventId = @json($event->id);
-            const eventSessionId = @json($eventSession->id);
+        let isSubmitting = false;
 
-            // Create a form element
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = `/attendance/${eventId}/${eventSessionId}/${decodedText}`;
+function onScanSuccess(decodedText, decodedResult) {
+    if (isSubmitting) return;
+    isSubmitting = true;
 
-            // Add CSRF token (required by Laravel for POST requests)
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            const csrfInput = document.createElement('input');
-            csrfInput.type = 'hidden';
-            csrfInput.name = '_token';
-            csrfInput.value = csrfToken;
-            form.appendChild(csrfInput);
+    // Get the Laravel Blade variables
+    const eventId = @json($event->id);
+    const eventSessionId = @json($eventSession->id);
 
-            // Append the form to the body and submit it
-            document.body.appendChild(form);
-            form.submit();
+    // Create a form element
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = `/attendance/${eventId}/${eventSessionId}/${decodedText}`;
 
-            // Optional: Log the result to the console (for debugging purposes)
-            console.log(`Submitting form to ${form.action}`, decodedResult);
-        }
+    // Add CSRF token (required by Laravel for POST requests)
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = '_token';
+    csrfInput.value = csrfToken;
+    form.appendChild(csrfInput);
+
+    // Append the form to the body and submit it
+    document.body.appendChild(form);
+    form.submit();
+
+    // Stop the scanner
+    if (window.html5QrCode) {
+        window.html5QrCode.stop().catch((error) => {
+            console.error("Failed to stop the scanner.", error);
+        });
+    }
+
+    // Optional: Log the result to the console (for debugging purposes)
+    console.log(`Submitting form to ${form.action}`, decodedResult);
+}
+
 
 
 
