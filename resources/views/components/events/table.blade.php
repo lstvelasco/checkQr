@@ -353,7 +353,7 @@
                                     @endif
                                 </td>
                                 <td class="px-4 py-3">
-                                    {{ $codesGenerated->count() }}
+                                    {{ $codesGenerated->where('event_id', $event->id)->where('event_session_id', $eventSession->id)->count() }}
                                 </td>
                                 <td class="flex items-center  px-4 py-3">
                                     <x-events.update :eventSession="$eventSession" type="session" />
