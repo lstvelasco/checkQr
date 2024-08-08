@@ -113,38 +113,43 @@ class AttendanceCodeController extends Controller
         //     abort(403, 'Unauthorized access.');
         // }
 
-        if ($sessionIsAcceptingAttendance) {
-            if (Auth::check()) {
-                // Check if the attendance code is valid and if the logged-in user is the owner
-                if ($attendanceCode && $attendanceCode->attendee_id == Auth::id()) {
+        if ($sessionIsAcceptingAttendance != true || $attendanceCode->eventSession->is_accepting_attendance != true) {
+            abort(403, 'Session not accepting attendance');
+        }
 
-                    // Check if an attendance record already exists
-                    $attendance = Attendance::where([
-                        'event_id' => $event->id,
-                        'event_session_id' => $eventSession->id,
-                        'attendee_id' => Auth::id(),
-                    ])->first();
 
-                    if ($attendance) {
-                        return redirect('/events/' . $event->id)->with('toast_warning', 'Attendance already recorded');
-                    }
+        if (!Auth::check()) {
+            abort(401);
+        }
 
-                    // If no record exists, create a new attendance record
-                    Attendance::create([
-                        'event_id' => $event->id,
-                        'event_session_id' => $eventSession->id,
-                        'attendee_id' => Auth::id(),
-                        'is_present' => true,
-                    ]);
+        if ($attendanceCode->attendee_id != Auth::id()) {
+            abort(403, 'Code mismatched');
+        }
 
-                    // Redirect to the event's page with a success message
-                    return redirect('/events/' . $event->id)->with('toast_success', 'Attendance recorded successfully');
-                } else {
-                    return redirect('/events/' . $event->id)->with('toast_danger', 'Code mismatched');
-                }
+        // Check if the attendance code is valid and if the logged-in user is the owner
+        if ($attendanceCode && $attendanceCode->attendee_id == Auth::id()) {
+
+            // Check if an attendance record already exists
+            $attendance = Attendance::where([
+                'event_id' => $event->id,
+                'event_session_id' => $eventSession->id,
+                'attendee_id' => Auth::id(),
+            ])->first();
+
+            if ($attendance) {
+                return redirect('/events/' . $event->id)->with('toast_warning', 'Attendance already recorded');
             }
-        } else {
-            return redirect('/events/' . $event->id)->with('toast_danger', 'Session already closed');
+
+            // If no record exists, create a new attendance record
+            Attendance::create([
+                'event_id' => $event->id,
+                'event_session_id' => $eventSession->id,
+                'attendee_id' => Auth::id(),
+                'is_present' => true,
+            ]);
+
+            // Redirect to the event's page with a success message
+            return redirect('/events/' . $event->id)->with('toast_success', 'Attendance recorded successfully');
         }
     }
 }
