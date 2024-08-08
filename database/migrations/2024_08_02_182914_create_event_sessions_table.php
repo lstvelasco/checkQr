@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreignIdFor(Event::class);
             $table->string('event_day'); // Day 1, Day 2, Day 3, etc
             $table->string('name'); // Morning in, Morning out, Afternoon in, Afternoon out
-            $table->dateTime('time_start');
-            $table->dateTime('time_end');
+            $table->time('time_start');
+            $table->time('time_end');
             $table->boolean('is_accepting_attendance')->default(false);
             $table->timestamps();
             $table->softDeletes();
